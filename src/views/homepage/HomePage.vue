@@ -1,17 +1,22 @@
 <template>
+  <div id="homepage">
     <nav-bar class="home-nav">
       <template v-slot:center><div>购物车</div></template>
     </nav-bar>
+    <home-swiper :banners="banners"/>
+  </div>
 </template>
 
 <script>
 import NavBar from "components/common/navbar/NavBar";
+import HomeSwiper from "./childcomps/HomeSwiper";
 import {getHomeMultidata} from "network/homepage";
 
 export default {
   name: 'HomePage',
   components: {
-    NavBar
+    NavBar,
+    HomeSwiper
   },
   data() {
     return {
