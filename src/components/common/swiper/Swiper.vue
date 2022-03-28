@@ -18,14 +18,14 @@
 		name: "Swiper",
     props: {
       interval: {
-		    type: Number,
+        type: Number,
         default: 3000
       },
       animDuration: {
-		    type: Number,
+        type: Number,
         default: 300
       },
-      moveRatio: {
+      moveRatio: { // 滑动比例
         type: Number,
         default: 0.25
       },
@@ -35,7 +35,7 @@
       }
     },
     data: function () {
-		  return {
+      return {
         slideCount: 0, // 元素个数
         totalWidth: 0, // swiper的宽度
         swiperStyle: {}, // swiper样式
@@ -43,7 +43,7 @@
         scrolling: false, // 是否正在滚动
       }
     },
-    mounted: function () {
+    mounted: function () { // 实例被挂载后
       // 1.操作DOM, 在前后添加Slide
       setTimeout(() => {
         this.handleDom();
@@ -53,13 +53,13 @@
       }, 3000)
     },
     methods: {
-		  /**
+      /**
        * 定时器操作
        */
       startTimer: function () {
-		    this.playTimer = window.setInterval(() => {
-		      this.currentIndex++;
-		      this.scrollContent(-this.currentIndex * this.totalWidth);
+        this.playTimer = window.setInterval(() => {
+          this.currentIndex++;
+          this.scrollContent(-this.currentIndex * this.totalWidth);
         }, this.interval)
       },
       stopTimer: function () {
@@ -98,9 +98,6 @@
             this.currentIndex = this.slideCount;
             this.setTransform(-this.currentIndex * this.totalWidth);
           }
-
-          // 2.结束移动后的回调
-          this.$emit('transitionEnd', this.currentIndex-1);
         }, this.animDuration)
       },
 
@@ -116,7 +113,7 @@
       /**
        * 操作DOM, 在DOM前后添加Slide
        */
-		  handleDom: function () {
+      handleDom: function () {
         // 1.获取要操作的元素
         let swiperEl = document.querySelector('.swiper');
         let slidesEls = swiperEl.getElementsByClassName('slide');
@@ -125,6 +122,7 @@
         this.slideCount = slidesEls.length;
 
         // 3.如果大于1个, 那么在前后分别添加一个slide
+        // 前面添加一个末尾元素的copy, 末尾添加一个开头元素的copy
         if (this.slideCount > 1) {
           let cloneFirst = slidesEls[0].cloneNode(true);
           let cloneLast = slidesEls[this.slideCount - 1].cloneNode(true);
@@ -163,16 +161,16 @@
         this.setTransform(moveDistance);
       },
 
-      touchEnd: function (e) {
+      touchEnd: function () {
         // 1.获取移动的距离
         let currentMove = Math.abs(this.distance);
 
         // 2.判断最终的距离
         if (this.distance === 0) {
           return
-        } else if (this.distance > 0 && currentMove > this.totalWidth * this.moveRatio) { // 右边移动超过0.5
+        } else if (this.distance > 0 && currentMove > this.totalWidth * this.moveRatio) { // 右边移动超过moveRatio
           this.currentIndex--
-        } else if (this.distance < 0 && currentMove > this.totalWidth * this.moveRatio) { // 向左移动超过0.5
+        } else if (this.distance < 0 && currentMove > this.totalWidth * this.moveRatio) { // 向左移动超过moveRatio
           this.currentIndex++
         }
 
@@ -180,29 +178,6 @@
         this.scrollContent(-this.currentIndex * this.totalWidth);
 
         // 4.移动完成后重新开启定时器
-        this.startTimer();
-      },
-
-      /**
-       * 控制上一个, 下一个
-       */
-      previous: function () {
-        this.changeItem(-1);
-      },
-
-      next: function () {
-        this.changeItem(1);
-      },
-
-      changeItem: function (num) {
-        // 1.移除定时器
-        this.stopTimer();
-
-        // 2.修改index和位置
-        this.currentIndex += num;
-        this.scrollContent(-this.currentIndex * this.totalWidth);
-
-        // 3.添加定时器
         this.startTimer();
       }
     }
