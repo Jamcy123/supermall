@@ -4,6 +4,7 @@
       <template v-slot:center><div>购物车</div></template>
     </nav-bar>
     <home-swiper :banners="banners"/>
+    <recommend-view :recommends="recommends"/>
   </div>
 </template>
 
@@ -11,12 +12,14 @@
 import NavBar from "components/common/navbar/NavBar";
 import HomeSwiper from "./childcomps/HomeSwiper";
 import {getHomeMultidata} from "network/homepage";
+import recommendView from "views/homepage/childcomps/RecommendView";
 
 export default {
   name: 'HomePage',
   components: {
     NavBar,
-    HomeSwiper
+    HomeSwiper,
+    recommendView
   },
   data() {
     return {
