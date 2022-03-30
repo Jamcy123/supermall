@@ -17,11 +17,11 @@
 	export default {
 		name: "Swiper",
     props: {
-      interval: {
+      interval: { // 自动切换间隔
         type: Number,
-        default: 3000
+        default: 2000
       },
-      animDuration: {
+      animDuration: { // 动画实现时长
         type: Number,
         default: 300
       },
@@ -29,7 +29,7 @@
         type: Number,
         default: 0.25
       },
-      showIndicator: {
+      showIndicator: { // 显示下标
         type: Boolean,
         default: true
       }
@@ -58,7 +58,10 @@
        */
       startTimer: function () {
         this.playTimer = window.setInterval(() => {
+          // 变化标记
           this.currentIndex++;
+
+          // 为了能够正确的滚动元素，做一些判断
           this.scrollContent(-this.currentIndex * this.totalWidth);
         }, this.interval)
       },
@@ -70,14 +73,16 @@
        * 滚动到正确的位置
        */
       scrollContent: function (currentPosition) {
-        // 0.设置正在滚动
+        // 1.设置正在滚动
         this.scrolling = true;
 
-        // 1.开始滚动动画
+        // 2.开始滚动动画
         this.swiperStyle.transition ='transform '+ this.animDuration + 'ms';
         this.setTransform(currentPosition);
 
-        // 2.判断滚动到的位置
+        // 3.判断滚动到的位置
+        // 即查看是否 到达末尾元素且需要向后滑动
+        // 或是 到达开头元素且需要向前滑动
         this.checkPosition();
 
         // 4.滚动完成
@@ -88,13 +93,24 @@
        * 校验正确的位置
        */
       checkPosition: function () {
+        // animDuration 时间后开始检查
+        // 即在 scrollContent() 里面完成滚动之后再检查
+        // 通过 0ms 瞬间移动到另一张不同位置的相同图片来做到无缝切换循环播放
         window.setTimeout(() => {
           // 1.校验正确的位置
           this.swiperStyle.transition = '0ms';
+
+          // 2. 判断是否到达了 最前面或最后面的 副本图片
           if (this.currentIndex >= this.slideCount + 1) {
+            // 说明到达了放在最末尾的副本
+            // 需要切换到最开始的一张原图
+            // 设置编号
             this.currentIndex = 1;
             this.setTransform(-this.currentIndex * this.totalWidth);
           } else if (this.currentIndex <= 0) {
+            // 说明到达了放在最开头的副本
+            // 需要切换到最后一张原图
+            // 设置编号
             this.currentIndex = this.slideCount;
             this.setTransform(-this.currentIndex * this.totalWidth);
           }
@@ -124,11 +140,16 @@
         // 3.如果大于1个, 那么在前后分别添加一个slide
         // 前面添加一个末尾元素的copy, 末尾添加一个开头元素的copy
         if (this.slideCount > 1) {
+          // 3.1 获取副本 并添加 4 1 2 3 4 1
           let cloneFirst = slidesEls[0].cloneNode(true);
           let cloneLast = slidesEls[this.slideCount - 1].cloneNode(true);
           swiperEl.insertBefore(cloneLast, slidesEls[0]);
           swiperEl.appendChild(cloneFirst);
-          this.totalWidth = swiperEl.offsetWidth;
+
+          // 3.2 宽度赋值
+          this.totalWidth = swiperEl.offsetWidth; // 是显示框的宽度
+
+          // 3.3 样式赋值
           this.swiperStyle = swiperEl.style;
         }
 
@@ -167,7 +188,8 @@
 
         // 2.判断最终的距离
         if (this.distance === 0) {
-          return
+          this.startTimer();
+          return ;
         } else if (this.distance > 0 && currentMove > this.totalWidth * this.moveRatio) { // 右边移动超过moveRatio
           this.currentIndex--
         } else if (this.distance < 0 && currentMove > this.totalWidth * this.moveRatio) { // 向左移动超过moveRatio
