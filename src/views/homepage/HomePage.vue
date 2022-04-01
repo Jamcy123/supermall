@@ -7,6 +7,7 @@
     <recommend-view :recommends="recommends"/>
     <feature/>
     <tab-control :titles="['流行', '新款', '精选']" />
+    <goods-list :goods="goods.pop.list"/>
     <ul>
       <li>1</li>
       <li>1</li>
@@ -30,6 +31,7 @@ import tabControl from "components/content/tabControl/TabControl"
 import HomeSwiper from "./childcomps/HomeSwiper";
 import recommendView from "views/homepage/childcomps/RecommendView";
 import feature from "views/homepage/childcomps/feature";
+import GoodsList from "components/content/goods/GoodsList";
 
 import { getHomeMultidata, getHomeGoods } from "network/homepage";
 
@@ -40,7 +42,8 @@ export default {
     tabControl,
     HomeSwiper,
     recommendView,
-    feature
+    feature,
+    GoodsList
   },
   data() {
     return {
