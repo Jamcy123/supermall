@@ -3,17 +3,23 @@
     <nav-bar class="home-nav">
       <template v-slot:center><div>首页</div></template>
     </nav-bar>
-
+    <tab-control :titles="['流行', '新款', '精选']"
+                 @tabClick="tabClick"
+                 ref="tabControl1"
+                 class="fixed"
+                 v-show="isTabFixed"/>
     <scroll class="content"
             ref="scroll"
             :probe-type="3"
             @scroll="contentScroll"
             :pullUpLoad="true"
             @pullingUp="loadMore">
-      <home-swiper :banners="banners"/>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
-      <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
+      <tab-control :titles="['流行', '新款', '精选']"
+                   @tabClick="tabClick"
+                   ref="tabControl2"/>
       <goods-list :goods="chooseList"/>
     </scroll>
     <!-- 不随着滚动 -->
@@ -58,7 +64,9 @@ export default {
         sell: {page: 0, list: []}
       },
       currentType: 'pop',
-      isShowBackTop: false
+      isShowBackTop: false,
+      tabOffsetTop: 0,
+      isTabFixed: false
     }
   },
   computed: {
@@ -77,14 +85,14 @@ export default {
 
   },
   mounted() {
-    // 监听 item 中的图片加载完成
+    // 1. 监听 item 中的图片加载完成
     // 挂载之后再通过 refs 绑定元素去监听
     const refresh = deBounce(this.$refs.scroll.refresh, 300);
-
     this.$bus.$on('itemImageLoad', () => {
       refresh();
     });
 
+    // 2. 获取 tabControl 的 offsetTop 属性
   },
   beforeDestory() {
     // 移除监听事件
@@ -106,6 +114,8 @@ export default {
           this.currentType = 'sell';
           break;
       }
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
     // 点击 backtop 回到顶部
     backClick() {
@@ -113,13 +123,19 @@ export default {
     },
     // 监听滚动
     contentScroll(position) {
+      // 是否显示 BackTop
       this.isShowBackTop = (-position.y) > 1000;
+      // 是否显示 tabControl1
+      this.isTabFixed = (-position.y) > this.tabOffsetTop;
     },
     // 上拉加载更多
     loadMore() {
       this.getHomeGoods(this.currentType); // 请求数据
     },
-
+    // 轮播图加载完成
+    swiperImageLoad() {
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
+    },
     /**
      * 网络请求相关
      */
@@ -146,7 +162,7 @@ export default {
 
 <style scoped>
   #homepage {
-    /*position: relative;*/
+    position: relative;
     height: 100vh;
   }
 
@@ -158,6 +174,11 @@ export default {
     /*left: 0;*/
     /*right: 0;*/
     /*z-index: 8;*/
+  }
+
+  .fixed {
+    position: relative;
+    z-index: 9;
   }
 
   .content {
