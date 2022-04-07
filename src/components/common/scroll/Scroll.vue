@@ -57,7 +57,11 @@ export default {
     // 刷新
     refresh() {
       this.scroll && this.scroll.refresh();
-    }
+    },
+    // 记录当前值
+    getScrollY() {
+      return this.scroll ? this.scroll.y : 0;
+    },
   }
 }
 </script>

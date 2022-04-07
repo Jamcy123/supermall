@@ -66,7 +66,8 @@ export default {
       currentType: 'pop',
       isShowBackTop: false,
       tabOffsetTop: 0,
-      isTabFixed: false
+      isTabFixed: false,
+      saveY: 0,
     }
   },
   computed: {
@@ -94,9 +95,12 @@ export default {
 
     // 2. 获取 tabControl 的 offsetTop 属性
   },
-  beforeDestory() {
-    // 移除监听事件
-    // this.$bus.$off('itemImageLoad');
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 0);
+    this.$refs.scroll.refresh();
+  },
+  deactivated() {
+    this.saveY = this.$refs.scroll.getScrollY();
   },
   methods: {
     /**
