@@ -1,5 +1,6 @@
-import {request} from "@/network/request";
+import {request} from "./request";
 
+// 详情页请求商品数据
 export function getDetail(iid) {
   return request({
     url: '/detail',
@@ -9,6 +10,7 @@ export function getDetail(iid) {
   })
 }
 
+// 整合 商品信息
 export class Goods {
   constructor(itemInfo, columns, services) {
     this.title = itemInfo.title;
@@ -19,5 +21,17 @@ export class Goods {
     this.columns = columns;
     this.services = services;
     this.realPrice = itemInfo.lowNowPrice;
+  }
+}
+
+// 整合 店铺信息
+export class Shop {
+  constructor(shopInfo) {
+    this.logo = shopInfo.shopLogo;
+    this.name = shopInfo.name;
+    this.fans = shopInfo.cFans;
+    this.sells = shopInfo.cSells;
+    this.score = shopInfo.score;
+    this.goodsCount = shopInfo.cGoods;
   }
 }

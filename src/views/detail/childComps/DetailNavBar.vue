@@ -1,5 +1,5 @@
 <template>
-  <div id="detail">
+  <div>
     <nav-bar>
       <template v-slot:left>
         <div class="back" @click="backClick">

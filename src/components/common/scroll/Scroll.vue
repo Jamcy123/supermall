@@ -32,7 +32,7 @@ export default {
     this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,
       probeType: this.probeType, // 侦测 0 1 不侦测实时位置 2 惯性部分不侦测 3 滚动都侦测
-      pullUpLoad: this.pullUpLoad //
+      pullUpLoad: this.pullUpLoad,
     })
 
     // 2. 监听滚动的位置
