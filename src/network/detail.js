@@ -10,6 +10,14 @@ export function getDetail(iid) {
   })
 }
 
+// 请求商品推荐数据
+export function  getRecommend() {
+  return request({
+    url: '/recommend'
+  })
+}
+
+
 // 整合 商品信息
 export class Goods {
   constructor(itemInfo, columns, services) {
@@ -45,3 +53,4 @@ export class GoodsParam {
     this.sizes = rule.tables;
   }
 }
+

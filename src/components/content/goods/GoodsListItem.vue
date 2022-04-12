@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="itemClick">
-    <img :src="goodsItem.show.img" alt="" @load="imageLoad">
+    <img :src="showImage" alt="" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -20,14 +20,34 @@ export default {
       }
     }
   },
+  computed: {
+    showImage() {
+      // 对首页商品和详情的推荐商品做一个判断
+      return this.goodsItem.img || this.goodsItem.image || this.goodsItem.show.img;
+    },
+    chooseId() {
+      // 商品 id 取值判断
+      return this.goodsItem.iid || this.goodsItem.item_id;
+    }
+  },
   methods: {
     imageLoad() {
-      // GoodListItem -> Home 非父子组件通信 使用事件总线 $bus
+      // GoodListItem -> HomePage 非父子组件通信 使用事件总线 $bus
+      // GoodListItem -> Detail 非父子组件通信 使用事件总线 $bus
       this.$bus.$emit('itemImageLoad');
+
+      // 方式一 路由区分
+      // if(this.$route.path.indexOf('/home') !== -1) {
+      //   this.$bus.$emit('homeItemImageLoad');
+      // } else if(this.$route.path.indexOf('detailItemLoad') !== -1) {
+      //   this.$bus.$emit('detailItemImgLoad');
+      // }
+
+      // 方式二 离开时取消事件监听
     },
     itemClick() {
       // console.log(123)
-      this.$router.push('/detail/' + this.goodsItem.iid)
+      this.$router.push('/detail/' + this.chooseId)
     }
   }
 }

@@ -8,6 +8,7 @@
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"/>
       <detail-param-info :param-info="paramInfo"/>
       <detail-comment-info :comment-info="commentInfo"/>
+      <goods-list :goods="recommends"/>
     </scroll>
   </div>
 </template>
@@ -20,9 +21,13 @@ import DetailShopInfo from "./childComps/DetailShopInfo"
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamInfo from "./childComps/DetailParamInfo";
 import DetailCommentInfo from "./childComps/DetailCommentInfo";
-import Scroll from "components/common/scroll/Scroll";
 
-import {getDetail, Goods, Shop, GoodsParam} from 'network/detail';
+import Scroll from "components/common/scroll/Scroll";
+import GoodsList from "components/content/goods/GoodsList";
+
+import {getDetail, getRecommend, Goods, Shop, GoodsParam} from 'network/detail';
+// import {deBounce} from "common/utils";
+import {itemListenerMixin} from "common/mixin";
 
 export default {
   name: "Detail",
@@ -35,7 +40,9 @@ export default {
     DetailParamInfo,
     DetailCommentInfo,
     Scroll,
+    GoodsList,
   },
+  mixins: [itemListenerMixin], // 混入
   data() {
     return {
       iid: null,
@@ -45,6 +52,7 @@ export default {
       detailInfo: {},
       paramInfo: {}, // 参数
       commentInfo: {}, // 评论
+      recommends: [], // 推荐
     }
   },
   created() {
@@ -54,7 +62,6 @@ export default {
     // 2. 根据 iid 请求详情数据
     getDetail(this.iid).then(res => {
       const data = res.result;
-      console.log(data)
       // 1. 保存轮播图数据
       this.topImages = data.itemInfo.topImages;
 
@@ -79,6 +86,25 @@ export default {
         this.commentInfo = data.rate.list[0];
       }
     });
+
+    // 3. 请求商品推荐数据
+    getRecommend().then((res) => {
+      this.recommends = res.data.list;
+    })
+  },
+  mounted() { // 用了混入
+  //   // 监听 item 中的图片加载完成
+  //   const refresh = deBounce(this.$refs.scroll,refresh, 50);
+  //
+  //   // 对监听的事件进行保存
+  //   this.itemImgListener = () => {
+  //     refresh();
+  //   };
+  //   this.$bus.$on('itemImageLoad', this.itemImgListener);
+  // },
+  // destroyed() { // detail 没有 keep-alive 所以这里不用 deactivated
+  //   // 取消事件监听
+  //   this.$bus.$off('itemImageLoad', this.itemImgListener);
   },
   methods: {
     imageLoad() {
