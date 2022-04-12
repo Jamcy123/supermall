@@ -40,7 +40,7 @@ export default {
       this.$emit('scroll', position);
     })
 
-    // 3. 监听滚动的位置
+    // 3. 上拉加载更多
     this.scroll.on("pullingUp", () => {
       this.$emit("pullingUp");
     })

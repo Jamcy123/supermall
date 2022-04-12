@@ -11,7 +11,7 @@
           <div v-for="(item, index) in titles" :key="index"
                class="title-item"
                :class="{active: index === currentIndex}"
-               @click="titleClick(index)">
+               @click="itemClick(index)">
             {{item}}
           </div>
         </div>
@@ -36,8 +36,10 @@ export default {
   },
   methods: {
     // 标题栏点击切换
-    titleClick(index) {
+    itemClick(index) {
       this.currentIndex = index;
+      // 传出 currentIndex
+      this.$emit('titleClick', index);
     },
     // 回退
     backClick() {

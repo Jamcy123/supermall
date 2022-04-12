@@ -1,14 +1,14 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav"/>
-    <scroll class="content" ref="scroll">
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav"/>
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"/>
-      <detail-param-info :param-info="paramInfo"/>
-      <detail-comment-info :comment-info="commentInfo"/>
-      <goods-list :goods="recommends"/>
+      <detail-param-info :param-info="paramInfo" ref="param"/>
+      <detail-comment-info :comment-info="commentInfo" ref="comment"/>
+      <goods-list :goods="recommends" ref="recommend"/>
     </scroll>
   </div>
 </template>
@@ -26,7 +26,7 @@ import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
 
 import {getDetail, getRecommend, Goods, Shop, GoodsParam} from 'network/detail';
-// import {deBounce} from "common/utils";
+import {deBounce} from "common/utils";
 import {itemListenerMixin} from "common/mixin";
 
 export default {
@@ -53,6 +53,9 @@ export default {
       paramInfo: {}, // 参数
       commentInfo: {}, // 评论
       recommends: [], // 推荐
+      themeTopYs: [], // 标题内容对应的 y 值
+      getThemeTopY: null, // 防抖
+      currentIndex: 0, // 记录当前滚动到第几个主题
     }
   },
   created() {
@@ -91,6 +94,16 @@ export default {
     getRecommend().then((res) => {
       this.recommends = res.data.list;
     })
+
+    // 4. 给 getThemeTopY 赋值 (对给 this.themeTopYs 赋值的操作进行防抖)
+    this.getThemeTopY = deBounce(() => {
+      this.themeTopYs = []; // 先清空，不然不止 4 个值
+      this.themeTopYs.push(0);
+      this.themeTopYs.push(this.$refs.param.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+      this.themeTopYs.push(Infinity);
+    }, 100);
   },
   mounted() { // 用了混入
   //   // 监听 item 中的图片加载完成
@@ -110,7 +123,43 @@ export default {
     imageLoad() {
       // 图片加载完后刷新 scroll
       this.$refs.scroll.refresh();
-    }
+      // 获取 4个主题的offsetTop
+      this.getThemeTopY();
+    },
+    // 点击标题，滚动到对应内容
+    titleClick(index) {
+      this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 500);
+    },
+    contentScroll(position) {
+      // 1. 获取 y 值
+      const positionY = -position.y;
+      const length = this.themeTopYs.length;
+      // 2. 判断 方式一
+      // for(let i = 0; i < length; i++) {
+      //   if(
+      //     this.currentIndex !== i && // 只考虑不是上一个 i 的情况，避免重复赋值
+      //     ((i < length - 1 && // 不是最后一个标签
+      //           positionY >= this.themeTopYs[i] && // 要考虑上下两个边界
+      //           positionY < this.themeTopYs[i + 1]) ||
+      //       (i === length - 1 && positionY >= this.themeTopYs[i]) // 最后一个标签只用考虑一个边界
+      //     )) {
+      //     this.currentIndex = i;
+      //     this.$refs.nav.currentIndex = this.currentIndex;
+      //   }
+      // }
+
+      // 方式二 引入一个最大的值与最后一个值进行比较
+      for(let i = 0; i < length - 1; i++) {
+        if(
+          this.currentIndex !== i && // 只考虑不是上一个 i 的情况，避免重复赋值
+          (positionY >= this.themeTopYs[i]) && // 上边界
+          positionY < this.themeTopYs[i + 1] // 下边界
+          ) {
+          this.currentIndex = i;
+          this.$refs.nav.currentIndex = this.currentIndex;
+        }
+      }
+    },
   }
 }
 </script>
