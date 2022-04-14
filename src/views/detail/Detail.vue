@@ -11,6 +11,7 @@
       <goods-list :goods="recommends" ref="recommend"/>
     </scroll>
     <detail-bottom-bar/>
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -26,6 +27,7 @@ import DetailBottomBar from "./childComps/DetailBottomBar";
 
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
+import BackTop from "components/content/backTop/BackTop";
 
 import {getDetail, getRecommend, Goods, Shop, GoodsParam} from 'network/detail';
 import {deBounce} from "common/utils";
@@ -44,6 +46,7 @@ export default {
     DetailBottomBar,
     Scroll,
     GoodsList,
+    BackTop,
   },
   mixins: [itemListenerMixin], // 混入
   data() {
@@ -59,6 +62,7 @@ export default {
       themeTopYs: [], // 标题内容对应的 y 值
       getThemeTopY: null, // 防抖
       currentIndex: 0, // 记录当前滚动到第几个主题
+      isShowBackTop: false, // 是否显示回到 BackTop
     }
   },
   created() {
@@ -123,16 +127,20 @@ export default {
   //   this.$bus.$off('itemImageLoad', this.itemImgListener);
   },
   methods: {
+    // 图片加载完后调用
     imageLoad() {
       // 图片加载完后刷新 scroll
       this.$refs.scroll.refresh();
       // 获取 4个主题的offsetTop
       this.getThemeTopY();
     },
+
     // 点击标题，滚动到对应内容
     titleClick(index) {
       this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 500);
     },
+
+    // 移动页面变化标题栏
     contentScroll(position) {
       // 1. 获取 y 值
       const positionY = -position.y;
@@ -162,6 +170,14 @@ export default {
           this.$refs.nav.currentIndex = this.currentIndex;
         }
       }
+
+      // 3. 是否显示 BackTop
+      this.isShowBackTop = (-position.y) > 1000;
+    },
+
+    // 点击 backtop 回到顶部
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0);
     },
   }
 }
