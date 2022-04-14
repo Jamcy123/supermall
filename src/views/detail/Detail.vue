@@ -179,6 +179,19 @@ export default {
     backClick() {
       this.$refs.scroll.scrollTo(0, 0);
     },
+
+    // 加入购物车
+    addToCart() {
+      // 1. 获取购物车需要展示的信息
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
+      // 2. 将商品添加到购物车里面
+      
+    }
   }
 }
 </script>
