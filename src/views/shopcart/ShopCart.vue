@@ -9,6 +9,7 @@
     <!-- 列表 -->
     <cart-list :list="list"/>
     <!-- 底部汇总 -->
+    <cart-bottom-bar/>
   </div>
 </template>
 
@@ -16,6 +17,7 @@
 import navBar from "components/common/navbar/NavBar";
 
 import cartList from "./childcomps/CartList";
+import cartBottomBar from "./childcomps/CartBottomBar";
 
 import { mapGetters } from "vuex";
 
@@ -23,7 +25,8 @@ export default {
   name: "ShopCart",
   components: {
     navBar,
-    cartList
+    cartList,
+    cartBottomBar,
   },
   computed: {
     // cartLength() {
