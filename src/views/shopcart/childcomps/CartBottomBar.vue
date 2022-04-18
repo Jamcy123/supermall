@@ -8,7 +8,7 @@
       <span>全选</span>
     </div>
     <div class="price">合计 : {{ totalPrice }}</div>
-    <div class="calculate">去结算 : {{ checkLength }}</div>
+    <div class="calculate" @click="calcClick">去结算 : {{ checkLength }}</div>
   </div>
 </template>
 
@@ -65,7 +65,7 @@ export default {
     },
     calcClick() {
       if(this.checkLength === 0) {
-        // this.$toast.show('请选择要购买的商品', 2000);
+        this.$toast.show('请选择要购买的商品', 2000);
       }
     }
   }
