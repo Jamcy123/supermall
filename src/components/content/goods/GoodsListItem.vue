@@ -47,7 +47,6 @@ export default {
       // 方式二 离开时取消事件监听
     },
     itemClick() {
-      // console.log(123)
       this.$router.push('/detail/' + this.chooseId)
     }
   }

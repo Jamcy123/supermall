@@ -11,7 +11,7 @@ toastObj.install = function (Vue) {
   // 3. 将组件对象 手动挂载到某一个元素上
   toast.$mount(document.createElement('div'));
 
-  // 4. toast.$el 对对应的就是 div
+  // 4. toast.$el 对应的就是 div
   document.body.appendChild(toast.$el);
   Vue.prototype.$toast = toast;
 }

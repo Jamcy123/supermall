@@ -9,6 +9,7 @@ const Category = () => import('views/category/CateGory')
 const Shopcart = () => import('views/shopcart/ShopCart')
 const Profile = () => import('views/profile/ProFile')
 const Detail = () => import('views/detail/Detail')
+
 // 映射关系
 const routes = [
   {

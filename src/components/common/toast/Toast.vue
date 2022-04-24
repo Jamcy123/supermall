@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       message: "",
-      isShow: false
+      isShow: false,
     }
   },
   methods: {
