@@ -28,7 +28,7 @@ export default {
     }
   },
   mounted() { // 挂载后才能获取控件
-    // 1. 创建 BSscroll 对象
+    // 1. 创建 BScroll 对象
     this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,
       probeType: this.probeType, // 侦测 0 1 不侦测实时位置 2 惯性部分不侦测 3 滚动都侦测
