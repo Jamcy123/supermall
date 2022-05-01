@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <keep-alive exclude="Detail">
-      <router-view/>
-    </keep-alive>
-    <main-tab-bar></main-tab-bar>
+    <button @click="btnClick" v-if="!showItem">v-if</button>
+    <div v-if="showItem">
+      <keep-alive exclude="Detail">
+        <router-view/>
+      </keep-alive>
+      <main-tab-bar></main-tab-bar>
+    </div>
   </div>
 </template>
 
@@ -14,6 +17,16 @@ export default {
   name: 'App',
   components: {
     MainTabBar
+  },
+  data() {
+    return {
+      showItem: false
+    }
+  },
+  methods: {
+    btnClick() {
+      this.showItem = !this.showItem;
+    }
   }
 }
 </script>

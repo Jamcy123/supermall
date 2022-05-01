@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <h2>我的</h2>
+  <div class="register">
+
   </div>
 </template>
 
 <script>
-
 export default {
-  name: "ProFile"
+  name: "Register"
 }
 </script>
 

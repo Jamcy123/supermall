@@ -4,11 +4,13 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 // 路由懒加载
-const HomePage = () => import('views/homepage/HomePage')
-const Category = () => import('views/category/CateGory')
-const Shopcart = () => import('views/shopcart/ShopCart')
-const Profile = () => import('views/profile/ProFile')
-const Detail = () => import('views/detail/Detail')
+const HomePage = () => import('views/homepage/HomePage');
+const Category = () => import('views/category/CateGory');
+const ShopCart = () => import('views/shopcart/ShopCart');
+const Profile = () => import('views/profile/ProFile');
+const Detail = () => import('views/detail/Detail');
+const Login = () => import('views/login/Login');
+const Register = () => import('views/register/Register');
 
 // 映射关系
 const routes = [
@@ -26,7 +28,7 @@ const routes = [
   },
   {
     path: '/shopcart',
-    component: Shopcart
+    component: ShopCart
   },
   {
     path: '/profile',
@@ -35,6 +37,14 @@ const routes = [
   {
     path: '/detail/:iid',
     component: Detail
+  },
+  {
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/register',
+    component: Register
   }
 ];
 
