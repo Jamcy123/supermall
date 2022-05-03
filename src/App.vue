@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-<!--    <button @click="btnClick" >v-if</button>-->
     <login v-if="!showItem"/>
     <div v-if="showItem">
       <keep-alive exclude="Detail">

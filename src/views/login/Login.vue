@@ -12,9 +12,19 @@
           <!--账号输入框-->
           <div class="u-input">
             <label for="user"></label>
-            <input type="text" name="user" id="user" placeholder="账号">
+            <input
+              type="text"
+              name="user"
+              id="user"
+              placeholder="账号"
+              maxlength="50" v-model="account"
+              @focus="btnClick"
+              @blur="btnClick"
+            />
+
           </div>
         </div>
+        {{account}}
         <!--密码-->
         <div class="input-box" id="password-box">
           <!--图标-->
@@ -30,9 +40,13 @@
         <!--错误提示-->
         <div class="error-box" style="display:none;"></div>
         <!--登录条款-->
-        <div>登录条款</div>
+<!--        <div>登录条款</div>-->
         <!--登录按钮-->
-        <div>登&nbsp;&nbsp;录</div>
+        <div>
+          <a href="javascript:void(0);" @click="btnClick">
+            登&nbsp;&nbsp;录
+          </a>
+        </div>
       </div>
     </form>
   </div>
@@ -40,11 +54,35 @@
 
 <script>
 export default {
-  name: "Login"
+  name: "Login",
+  data() {
+    return {
+      account: '',
+      password: '',
+      accountRight: false,
+      passwordRight: false,
+    }
+  },
+  methods: {
+    btnClick() {
+      console.log(123)
+    },
+    accountCheck() {
+      // 手机号
+      var regex = /xyz/;
+      /cat/.test('cats and dogs') // true
+      // 邮箱
+
+    }
+  }
 }
 </script>
 
 <style scoped>
+  *{
+    touch-action: none
+  }
+
   .login {
     height: 100vh;
     display: flex;
