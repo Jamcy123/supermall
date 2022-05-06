@@ -10,7 +10,7 @@
             <div class="u-logo-img1"></div>
           </div>
           <!--账号输入框-->
-          <div class="u-input">
+          <div class="u-input" aria-required="true">
             <label for="user"></label>
             <input
               type="text"
@@ -53,6 +53,8 @@
 </template>
 
 <script>
+import {validateEmail, validatePhone} from "@/common/utils";
+
 export default {
   name: "Login",
   data() {
@@ -66,12 +68,21 @@ export default {
   methods: {
     btnClick() {
       console.log(123)
+      console.log(phoneRegexp.test(this.account));
+      if(!this.accountCheck(this.account)) {
+        console.log('账号格式不符合要求');
+      }
     },
-    accountCheck() {
-      // 手机号
-      var regex = /xyz/;
-      /cat/.test('cats and dogs') // true
-      // 邮箱
+    accountCheck(account) {
+      // 非空
+      if(account.length === 0) return false;
+      // 手机号 邮箱
+      if(!validatePhone(account) && !validateEmail(account)) return false;
+      // 符合要求
+      return true;
+    },
+    passwordCheck(password) {
+      // 8-16个字符，需包含大、小写字母和数字
 
     }
   }

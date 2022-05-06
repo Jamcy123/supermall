@@ -44,3 +44,20 @@ export function formatDate(date, fmt) {
 function padLeftZero(str) {
   return ('00' + str).substring(str.length);
 }
+
+export function validateEmail(email) {
+  const emailRegexp = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+  return emailRegexp.test(email);
+}
+
+export function validatePhone(phone) {
+  const phoneRegexp = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[1456789]|19[189])[0-9]{8}$/;
+  return phoneRegexp.test(phone);
+}
+
+export function validatePassword(password) {
+  // 8-16个字符，需包含大、小写字母和数字
+  // 可以包含 符号
+  const passwordRegexp = /^[a-z]{8,16}$/;
+  return passwordRegexp.test(password);
+}
