@@ -17,7 +17,8 @@
               name="user"
               id="user"
               placeholder="账号"
-              maxlength="50" v-model="account"
+              maxlength="50"
+              v-model="account"
               @focus="btnClick"
               @blur="btnClick"
             />
@@ -34,9 +35,16 @@
           <!--密码输入框-->
           <div>
             <label for="u_password"></label>
-            <input type="password" name="u_password" id="u_password" placeholder="密码">
+            <input type="password"
+                   name="u_password"
+                   id="u_password"
+                   v-model="password"
+                   placeholder="密码"
+                   @blur="btnClick"
+            >
           </div>
         </div>
+        {{password}}
         <!--错误提示-->
         <div class="error-box" style="display:none;"></div>
         <!--登录条款-->
@@ -53,7 +61,11 @@
 </template>
 
 <script>
-import {validateEmail, validatePhone} from "@/common/utils";
+import {
+  validateEmail,
+  validatePhone,
+  validatePassword
+} from "@/common/utils";
 
 export default {
   name: "Login",
@@ -68,9 +80,12 @@ export default {
   methods: {
     btnClick() {
       console.log(123)
-      console.log(phoneRegexp.test(this.account));
-      if(!this.accountCheck(this.account)) {
-        console.log('账号格式不符合要求');
+      // if(!this.accountCheck(this.account)) {
+      //   console.log('账号格式不符合要求');
+      // }
+      // /^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/
+      if(!this.passwordCheck(this.password)) {
+        console.log('密码格式不符合要求');
       }
     },
     accountCheck(account) {
@@ -83,7 +98,7 @@ export default {
     },
     passwordCheck(password) {
       // 8-16个字符，需包含大、小写字母和数字
-
+      return validatePassword(password);
     }
   }
 }
