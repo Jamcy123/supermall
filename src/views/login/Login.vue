@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="pic">标题</div>
-    <form action="">
+    <form :action="formAction" method="post" ref="form">
       <div class="m-container">
         <!--账号-->
         <div class="input-box" id="account-box">
@@ -10,19 +10,18 @@
             <div class="u-logo-img1"></div>
           </div>
           <!--账号输入框-->
-          <div class="u-input" aria-required="true">
-            <label for="user"></label>
+          <div class="u-input">
+            <label for="u_account"></label>
             <input
               type="text"
-              name="user"
-              id="user"
+              name="u_account"
+              id="u_account"
               placeholder="账号"
               maxlength="50"
               v-model="account"
-              @focus="btnClick"
-              @blur="btnClick"
+              @focus="accountFocus"
+              @blur="accountBlur"
             />
-
           </div>
         </div>
         {{account}}
@@ -40,8 +39,9 @@
                    id="u_password"
                    v-model="password"
                    placeholder="密码"
-                   @blur="btnClick"
-            >
+                   @focus="passwordFocus"
+                   @blur="passwordBlur"
+            />
           </div>
         </div>
         {{password}}
@@ -51,7 +51,7 @@
 <!--        <div>登录条款</div>-->
         <!--登录按钮-->
         <div>
-          <a href="javascript:void(0);" @click="btnClick">
+          <a href="javascript:void(0);" @click="loginClick">
             登&nbsp;&nbsp;录
           </a>
         </div>
@@ -71,6 +71,7 @@ export default {
   name: "Login",
   data() {
     return {
+      formAction:'./index.html',
       account: '',
       password: '',
       accountRight: false,
@@ -78,16 +79,37 @@ export default {
     }
   },
   methods: {
-    btnClick() {
-      console.log(123)
-      // if(!this.accountCheck(this.account)) {
-      //   console.log('账号格式不符合要求');
-      // }
-      // /^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/
-      if(!this.passwordCheck(this.password)) {
-        console.log('密码格式不符合要求');
+    /**
+     * 输入框焦点相关
+     */
+    accountBlur() {
+      if(!this.accountCheck(this.account)) {
+        this.accountRight = false;
+        console.log('账号格式不符合要求');
+      } else {
+        this.accountRight = true;
+        console.log('账号格式符合要求');
       }
     },
+    passwordBlur() {
+      if(!this.passwordCheck(this.password)) {
+        this.passwordRight = false;
+        console.log('密码格式不符合要求');
+      } else {
+        this.passwordRight = true;
+        console.log('密码格式符合要求');
+      }
+    },
+    accountFocus() {
+
+    },
+    passwordFocus() {
+
+    },
+
+    /**
+     * 正则相关
+     */
     accountCheck(account) {
       // 非空
       if(account.length === 0) return false;
@@ -97,8 +119,26 @@ export default {
       return true;
     },
     passwordCheck(password) {
-      // 8-16个字符，需包含大、小写字母和数字
+      // 8-16个字符, 需包含大、小写字母和数字, 不能包含空格
       return validatePassword(password);
+    },
+
+    /**
+     * 登录按钮
+     */
+    loginClick() {
+      // 本地判断
+      !this.accountRight && this.accountBlur();
+      !this.passwordRight && this.passwordBlur();
+
+      // 提交数据
+      // this.$refs.form.submit();
+
+      // 返回值处理？
+
+      // 存储 切换
+      // this.$store.commit('addAccount', this.account);
+      // console.log(this.$store.state);
     }
   }
 }
@@ -151,13 +191,13 @@ export default {
   .input-box .u-logo .u-logo-img1 {
     width: 20px;
     height: 20px;
-    background: url("https://mimg.127.net/p/freemail/index/lib/img/urs/ico-user.png") no-repeat;
+    background: url("~assets/img/login/ico-user.png") no-repeat;
   }
 
   .input-box .u-logo .u-logo-img2 {
     width: 20px;
     height: 20px;
-    background: url("https://mimg.127.net/p/freemail/index/lib/img/urs/ico-password.png") no-repeat;
+    background: url("~assets/img/login/ico-password.png") no-repeat;
   }
 
 </style>

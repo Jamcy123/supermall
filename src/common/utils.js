@@ -56,12 +56,7 @@ export function validatePhone(phone) {
 }
 
 export function validatePassword(password) {
-  // 8-16个字符，需包含大、小写字母和数字
-  // 可以包含 符号
-  // const passwordRegexp = /^.*(?=.{8,})(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/;
-  // const passwordRegexp = /^.*(?=.*[0-9]).*$/;
-  // ^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$
-  const passwordRegexp = /^.*(?!.*[\s]).*$/;
-  // const passwordRegexp = /^.*(?=.*[@#$%^&+=]).*$/;
+  // 8-16个字符, 需包含大、小写字母和数字, 不能包含空格
+  const passwordRegexp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,16}$/;
   return passwordRegexp.test(password);
 }
