@@ -1,50 +1,29 @@
 <template>
   <div class="login">
-    <div class="pic">标题</div>
+    <div class="logo">标题</div>
     <form :action="formAction" method="post" ref="form">
       <div class="m-container">
-        <!--账号-->
-        <div class="input-box" id="account-box">
-          <!--图标-->
-          <div class="u-logo">
-            <div class="u-logo-img1"></div>
-          </div>
-          <!--账号输入框-->
-          <div class="u-input">
-            <label for="u_account"></label>
-            <input
-              type="text"
-              name="u_account"
-              id="u_account"
-              placeholder="账号"
-              maxlength="50"
-              v-model="account"
-              @focus="accountFocus"
-              @blur="accountBlur"
-            />
-          </div>
-        </div>
-        {{account}}
+        <uesr-input
+          ref="userAccount"
+          dataType="text"
+          dataPlaceholder="账号"
+          dataName="userAccount"
+          @inputFocus="accountFocus"
+          @inputBlur="accountBlur"
+        >
+          <img src="~assets/img/login/ico-user.png" alt="用户标志">
+        </uesr-input>
         <!--密码-->
-        <div class="input-box" id="password-box">
-          <!--图标-->
-          <div class="u-logo">
-            <div class="u-logo-img2"></div>
-          </div>
-          <!--密码输入框-->
-          <div>
-            <label for="u_password"></label>
-            <input type="password"
-                   name="u_password"
-                   id="u_password"
-                   v-model="password"
-                   placeholder="密码"
-                   @focus="passwordFocus"
-                   @blur="passwordBlur"
-            />
-          </div>
-        </div>
-        {{password}}
+        <uesr-input
+          ref="userPassword"
+          dataType="password"
+          dataPlaceholder="密码"
+          dataName="userAccount"
+          @inputFocus="passwordFocus"
+          @inputBlur="passwordBlur"
+        >
+          <img src="~assets/img/login/ico-password.png" alt="用户标志">
+        </uesr-input>
         <!--错误提示-->
         <div class="error-box" style="display:none;"></div>
         <!--登录条款-->
@@ -57,10 +36,13 @@
         </div>
       </div>
     </form>
+    <button @click="btnClick">123</button>
   </div>
 </template>
 
 <script>
+import UesrInput from "components/content/userInput/UesrInput";
+
 import {
   validateEmail,
   validatePhone,
@@ -69,9 +51,12 @@ import {
 
 export default {
   name: "Login",
+  components: {
+    UesrInput
+  },
   data() {
     return {
-      formAction:'./index.html',
+      formAction:'',
       account: '',
       password: '',
       accountRight: false,
@@ -79,10 +64,15 @@ export default {
     }
   },
   methods: {
+    btnClick() {
+      this.$refs.userAccount.showError(123);
+    },
+
     /**
      * 输入框焦点相关
      */
     accountBlur() {
+      this.account = this.$refs.userAccount.message;
       if(!this.accountCheck(this.account)) {
         this.accountRight = false;
         console.log('账号格式不符合要求');
@@ -92,6 +82,7 @@ export default {
       }
     },
     passwordBlur() {
+      this.password = this.$refs.userPassword.message;
       if(!this.passwordCheck(this.password)) {
         this.passwordRight = false;
         console.log('密码格式不符合要求');
@@ -101,10 +92,10 @@ export default {
       }
     },
     accountFocus() {
-
+      this.$refs.userAccount.closeError();
     },
     passwordFocus() {
-
+      this.$refs.userPassword.closeError();
     },
 
     /**
@@ -145,10 +136,6 @@ export default {
 </script>
 
 <style scoped>
-  *{
-    touch-action: none
-  }
-
   .login {
     height: 100vh;
     display: flex;
@@ -157,7 +144,7 @@ export default {
     justify-content: center;
   }
 
-  .pic {
+  .logo {
     height: 100px;
   }
 
@@ -169,35 +156,8 @@ export default {
     justify-content: center;
   }
 
-  .input-box {
+  img {
     margin: 10px;
-    /*padding: 5px;*/
-    border: 1px solid black;
-    border-radius: 1%;
-    display: flex;
-  }
-
-  input {
-    border: none;
-    height: 46px;
-  }
-
-  .u-logo {
-    width: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .input-box .u-logo .u-logo-img1 {
-    width: 20px;
-    height: 20px;
-    background: url("~assets/img/login/ico-user.png") no-repeat;
-  }
-
-  .input-box .u-logo .u-logo-img2 {
-    width: 20px;
-    height: 20px;
-    background: url("~assets/img/login/ico-password.png") no-repeat;
   }
 
 </style>
