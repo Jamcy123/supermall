@@ -1,20 +1,26 @@
 <template>
   <div class="user-input">
     <div class="main-container">
+      <!--图标-->
       <div class="pic">
         <slot></slot>
       </div>
+      <!--输入框-->
       <div class="input-box">
         <input :type="dataType"
                :name="dataName"
                :placeholder="dataPlaceholder"
                v-model="message"
                @focus="inputFocus"
-               @blur="inputBlur"
         />
       </div>
     </div>
-    <div class="error-box" v-if="isErrorShow">{{error}}</div>
+    <!--错误提示-->
+    <div class="error-box"
+         ref="errorBox"
+    >
+    </div>
+<!--    <div class="error-box" v-if="isErrorShow"></div>-->
   </div>
 </template>
 
@@ -44,7 +50,8 @@ export default {
   data() {
     return {
       message: '',
-      isErrorShow: true,
+      isErrorShow: false,
+      errMsgDiv: null, // 错误信息盒子
       error: '错误信息展示'
     }
   },
@@ -53,19 +60,26 @@ export default {
     inputFocus() {
       this.$emit('inputFocus');
     },
-    // 失去焦点
-    inputBlur() {
-      this.$emit('inputBlur');
-    },
     // 展示错误信息
     showError(error) {
       this.error = error;
+      // 请输入账号
+      // 请输入密码
+      // 账号或密码错误
       this.isErrorShow = true;
+      if(!this.errMsgDiv) {
+        const errMsgDiv = document.createElement('div');
+        this.errMsgDiv = errMsgDiv;
+        console.log(errMsgDiv)
+        this.$refs.errorBox.appendChild(errMsgDiv);
+      }
+      this.errMsgDiv.innerHTML = this.error;
+
     },
     // 关闭错误信息
     closeError() {
       this.isErrorShow = false;
-    }
+    },
   }
 }
 </script>

@@ -1,7 +1,9 @@
 <template>
   <div class="login">
+    <!--商标-->
     <div class="logo">标题</div>
     <form :action="formAction" method="post" ref="form">
+      <!--账号-->
       <div class="m-container">
         <uesr-input
           ref="userAccount"
@@ -9,7 +11,6 @@
           dataPlaceholder="账号"
           dataName="userAccount"
           @inputFocus="accountFocus"
-          @inputBlur="accountBlur"
         >
           <img src="~assets/img/login/ico-user.png" alt="用户标志">
         </uesr-input>
@@ -20,7 +21,6 @@
           dataPlaceholder="密码"
           dataName="userAccount"
           @inputFocus="passwordFocus"
-          @inputBlur="passwordBlur"
         >
           <img src="~assets/img/login/ico-password.png" alt="用户标志">
         </uesr-input>
@@ -65,37 +65,59 @@ export default {
   },
   methods: {
     btnClick() {
-      this.$refs.userAccount.showError(123);
+      // 判断格式 显示错误
+      this.accountError();
+      this.passwordError();
+      // 格式正确
+      if(this.accountRight && this.passwordRight) {
+        // 查询信息
+        // 账号或密码错误提示
+        this.$refs.userPassword.showError('账号或密码错误');
+      }
     },
 
     /**
-     * 输入框焦点相关
+     * 输入框错误显示相关
      */
-    accountBlur() {
+    // 账号框获取焦点，不显示错误
+    accountFocus() {
+      this.$refs.userAccount.closeError();
+      this.$refs.userPassword.closeError();
+    },
+    // 密码框获取焦点，不显示错误
+    passwordFocus() {
+      this.$refs.userAccount.closeError();
+      this.$refs.userPassword.closeError();
+    },
+    // 账号框错误显示
+    accountError() {
+      // 存储获取输入内容
       this.account = this.$refs.userAccount.message;
-      if(!this.accountCheck(this.account)) {
+      // 判断格式
+      if(this.account.length === 0) {
+        this.$refs.userAccount.showError('请输入账号');
+      } else if(!this.accountCheck(this.account)) {
         this.accountRight = false;
-        console.log('账号格式不符合要求');
+        this.$refs.userAccount.showError('账号格式不符合要求');
       } else {
         this.accountRight = true;
         console.log('账号格式符合要求');
       }
     },
-    passwordBlur() {
+    // 密码框错误显示
+    passwordError() {
+      // 存储获取输入内容
       this.password = this.$refs.userPassword.message;
-      if(!this.passwordCheck(this.password)) {
+      // 判断格式
+      if(this.password.length === 0) {
+        this.$refs.userPassword.showError('请输入密码');
+      } else if(!this.passwordCheck(this.password)) {
         this.passwordRight = false;
-        console.log('密码格式不符合要求');
+        this.$refs.userPassword.showError('密码格式不符合要求');
       } else {
         this.passwordRight = true;
         console.log('密码格式符合要求');
       }
-    },
-    accountFocus() {
-      this.$refs.userAccount.closeError();
-    },
-    passwordFocus() {
-      this.$refs.userPassword.closeError();
     },
 
     /**
@@ -119,8 +141,8 @@ export default {
      */
     loginClick() {
       // 本地判断
-      !this.accountRight && this.accountBlur();
-      !this.passwordRight && this.passwordBlur();
+      // !this.accountRight && this.accountBlur();
+      // !this.passwordRight && this.passwordBlur();
 
       // 提交数据
       // this.$refs.form.submit();
