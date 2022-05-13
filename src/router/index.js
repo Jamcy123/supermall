@@ -38,14 +38,12 @@ const routes = [
     path: '/detail/:iid',
     component: Detail
   },
-  // {
-  //   path: '/login',
-  //   component: Login
-  // },
-  // {
-  //   path: '/register',
-  //   component: Register
-  // }
+  {
+    path: '/login',
+  },
+  {
+    path: '/register',
+  }
 ];
 
 export default new Router({

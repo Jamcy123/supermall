@@ -25,6 +25,11 @@ export default {
       showItem: false
     }
   },
+  mounted() {
+    this.$bus.$on('homePageShow', () => {
+      this.showItem = !this.showItem;
+    });
+  },
   methods: {
     btnClick() {
       this.showItem = !this.showItem;

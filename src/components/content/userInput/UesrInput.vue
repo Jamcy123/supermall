@@ -2,7 +2,7 @@
   <div class="user-input">
     <div class="main-container">
       <!--图标-->
-      <div class="pic">
+      <div class="pic-logo">
         <slot></slot>
       </div>
       <!--输入框-->
@@ -16,11 +16,10 @@
       </div>
     </div>
     <!--错误提示-->
-    <div class="error-box"
-         ref="errorBox"
-    >
+    <div class="error-box" v-show="isErrorShow">
+      <div class="err-img"></div>
+      <div class="err-mes" ref="errMsgDiv"></div>
     </div>
-<!--    <div class="error-box" v-if="isErrorShow"></div>-->
   </div>
 </template>
 
@@ -51,7 +50,6 @@ export default {
     return {
       message: '',
       isErrorShow: false,
-      errMsgDiv: null, // 错误信息盒子
       error: '错误信息展示'
     }
   },
@@ -63,18 +61,10 @@ export default {
     // 展示错误信息
     showError(error) {
       this.error = error;
-      // 请输入账号
-      // 请输入密码
-      // 账号或密码错误
+      // 展示盒子
       this.isErrorShow = true;
-      if(!this.errMsgDiv) {
-        const errMsgDiv = document.createElement('div');
-        this.errMsgDiv = errMsgDiv;
-        console.log(errMsgDiv)
-        this.$refs.errorBox.appendChild(errMsgDiv);
-      }
-      this.errMsgDiv.innerHTML = this.error;
-
+      // 修改错误信息
+      this.$refs.errMsgDiv.innerHTML = this.error;
     },
     // 关闭错误信息
     closeError() {
@@ -104,7 +94,7 @@ export default {
     width: 100%;
   }
 
-  .pic {
+  .pic-logo {
     max-width: 40px;
     max-height: 40px;
   }
@@ -114,5 +104,21 @@ export default {
     height: 100%;
     width: 100%;
     flex: 1;
+  }
+
+  .err-mes {
+    display: inline-block;
+    margin-left: 5px;
+    vertical-align: top;
+    color: red;
+    font-size: 13px;
+  }
+
+  .err-img {
+    display: inline-block;
+    margin-left: 8px;
+    width: 16px;
+    height: 16px;
+    background: url("~assets/img/login/err-img.png") no-repeat;
   }
 </style>

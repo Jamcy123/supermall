@@ -74,6 +74,7 @@ export default {
         // 账号或密码错误提示
         this.$refs.userPassword.showError('账号或密码错误');
       }
+      this.homePageShow();
     },
 
     /**
@@ -152,12 +153,20 @@ export default {
       // 存储 切换
       // this.$store.commit('addAccount', this.account);
       // console.log(this.$store.state);
+    },
+    homePageShow() {
+      this.$router.push('/homepage')
+      this.$bus.$emit('homePageShow');
     }
   }
 }
 </script>
 
 <style scoped>
+  * {
+    touch-action: none;
+  }
+
   .login {
     height: 100vh;
     display: flex;
