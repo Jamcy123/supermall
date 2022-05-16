@@ -5,17 +5,9 @@
     <form :action="formAction" method="post" ref="form">
       <div class="m-container">
         <!--账号-->
-        <account-input
-          ref="userAccount"
-          @accountFocus="accountFocus"
-        >
-        </account-input>
+        <account-input ref="userAccount" @accountFocus="accountFocus"/>
         <!--密码-->
-        <password-input
-          ref="userPassword"
-          @passwordFocus="passwordFocus"
-        >
-        </password-input>
+        <password-input ref="userPassword" @passwordFocus="passwordFocus"/>
         <!--错误提示-->
         <!--登录条款-->
 <!--        <div>登录条款</div>-->
@@ -190,22 +182,5 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
-
-  img {
-    margin: 10px;
-  }
-
-  .eye-close {
-    width: 22px;
-    height: 22px;
-    background-image: url("~assets/img/login/eye.png");
-    background-repeat: no-repeat;
-    margin-right: 7px;
-    background-position: -179px -476px;
-  }
-
-  .eye-open {
-    background-position: -94px -476px;
   }
 </style>
