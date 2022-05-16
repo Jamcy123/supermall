@@ -3,29 +3,20 @@
     <!--商标-->
     <div class="logo">标题</div>
     <form :action="formAction" method="post" ref="form">
-      <!--账号-->
       <div class="m-container">
-        <uesr-input
+        <!--账号-->
+        <account-input
           ref="userAccount"
-          dataType="text"
-          dataPlaceholder="账号"
-          dataName="userAccount"
-          @inputFocus="accountFocus"
+          @accountFocus="accountFocus"
         >
-          <img src="~assets/img/login/ico-user.png" alt="用户标志">
-        </uesr-input>
+        </account-input>
         <!--密码-->
-        <uesr-input
+        <password-input
           ref="userPassword"
-          dataType="password"
-          dataPlaceholder="密码"
-          dataName="userAccount"
-          @inputFocus="passwordFocus"
+          @passwordFocus="passwordFocus"
         >
-          <img src="~assets/img/login/ico-password.png" alt="用户标志">
-        </uesr-input>
+        </password-input>
         <!--错误提示-->
-        <div class="error-box" style="display:none;"></div>
         <!--登录条款-->
 <!--        <div>登录条款</div>-->
         <!--登录按钮-->
@@ -36,12 +27,14 @@
         </div>
       </div>
     </form>
-    <button @click="btnClick">123</button>
+    <button @click="loginClick">123</button>
   </div>
 </template>
 
 <script>
 import UesrInput from "components/content/userInput/UesrInput";
+import AccountInput from "./childcomps/AccountInput";
+import PasswordInput from "@/views/login/childcomps/PasswordInput";
 
 import {
   validateEmail,
@@ -52,31 +45,27 @@ import {
 export default {
   name: "Login",
   components: {
-    UesrInput
+    UesrInput,
+    AccountInput,
+    PasswordInput,
   },
   data() {
     return {
-      formAction:'',
-      account: '',
-      password: '',
-      accountRight: false,
-      passwordRight: false,
+      formAction:'', // 表单提交链接
+      account: '', // 账号
+      password: '', // 密码
+      accountRight: false, // 账号格式正确
+      passwordRight: false, // 密码格式正确
+      passwordShow: false, // 显示密码
+    }
+  },
+  computed: {
+    // 显示密码按钮
+    eyeStyle() {
+      return this.passwordShow ? 'eye-close eye-open' : 'eye-close';
     }
   },
   methods: {
-    btnClick() {
-      // 判断格式 显示错误
-      this.accountError();
-      this.passwordError();
-      // 格式正确
-      if(this.accountRight && this.passwordRight) {
-        // 查询信息
-        // 账号或密码错误提示
-        this.$refs.userPassword.showError('账号或密码错误');
-      }
-      this.homePageShow();
-    },
-
     /**
      * 输入框错误显示相关
      */
@@ -93,7 +82,7 @@ export default {
     // 账号框错误显示
     accountError() {
       // 存储获取输入内容
-      this.account = this.$refs.userAccount.message;
+      this.account = this.$refs.userAccount.account;
       // 判断格式
       if(this.account.length === 0) {
         this.$refs.userAccount.showError('请输入账号');
@@ -108,7 +97,7 @@ export default {
     // 密码框错误显示
     passwordError() {
       // 存储获取输入内容
-      this.password = this.$refs.userPassword.message;
+      this.password = this.$refs.userPassword.password;
       // 判断格式
       if(this.password.length === 0) {
         this.$refs.userPassword.showError('请输入密码');
@@ -142,21 +131,37 @@ export default {
      */
     loginClick() {
       // 本地判断
-      // !this.accountRight && this.accountBlur();
-      // !this.passwordRight && this.passwordBlur();
+      this.accountError();
+      this.passwordError();
 
-      // 提交数据
-      // this.$refs.form.submit();
+      // 格式正确
+      if(this.accountRight && this.passwordRight) {
+        // 提交数据
+        // this.$refs.form.submit();
 
-      // 返回值处理？
+        // 返回值处理？
 
-      // 存储 切换
-      // this.$store.commit('addAccount', this.account);
-      // console.log(this.$store.state);
+        // 账号或密码错误提示
+        this.$refs.userPassword.showError('账号或密码错误');
+
+        // 账号密码正确
+        // 存储账号
+        // this.$store.commit('addAccount', this.account);
+        // console.log(this.$store.state);
+        // 切换页面
+        // this.homePageShow();
+      }
     },
     homePageShow() {
       this.$router.push('/homepage')
       this.$bus.$emit('homePageShow');
+    },
+
+    /**
+     * 密码显示
+     */
+    eyeWink() {
+      this.passwordShow = !this.passwordShow;
     }
   }
 }
@@ -191,4 +196,16 @@ export default {
     margin: 10px;
   }
 
+  .eye-close {
+    width: 22px;
+    height: 22px;
+    background-image: url("~assets/img/login/eye.png");
+    background-repeat: no-repeat;
+    margin-right: 7px;
+    background-position: -179px -476px;
+  }
+
+  .eye-open {
+    background-position: -94px -476px;
+  }
 </style>

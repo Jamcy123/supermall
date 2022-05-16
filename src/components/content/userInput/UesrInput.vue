@@ -2,8 +2,8 @@
   <div class="user-input">
     <div class="main-container">
       <!--图标-->
-      <div class="pic-logo">
-        <slot></slot>
+      <div class="icon-box">
+        <slot name="icon-slot"></slot>
       </div>
       <!--输入框-->
       <div class="input-box">
@@ -12,7 +12,12 @@
                :placeholder="dataPlaceholder"
                v-model="message"
                @focus="inputFocus"
+               class="input-label"
         />
+      </div>
+      <!--右边插槽-->
+      <div class="option-box">
+        <slot name="option-slot"></slot>
       </div>
     </div>
     <!--错误提示-->
@@ -89,21 +94,26 @@ export default {
     align-items: center;
   }
 
+  .main-container:focus-within {
+    border: 1px solid var(--color-tint);
+  }
+
   .input-box {
     height: 100%;
     width: 100%;
   }
 
-  .pic-logo {
+  .icon-box {
     max-width: 40px;
     max-height: 40px;
   }
 
   input {
-    border: none;
     height: 100%;
     width: 100%;
     flex: 1;
+    border: none;
+    outline: none;
   }
 
   .err-mes {
@@ -121,4 +131,5 @@ export default {
     height: 16px;
     background: url("~assets/img/login/err-img.png") no-repeat;
   }
+
 </style>
