@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <login v-if="!showItem"/>
-    <div v-if="showItem">
+    <!--登录注册-->
+    <div v-if="!showMall" class="outside">
+      <router-view/>
+    </div>
+    <!--商城页面-->
+    <div v-if="showMall" class="inside">
       <keep-alive exclude="Detail">
         <router-view/>
       </keep-alive>
@@ -22,18 +26,13 @@ export default {
   },
   data() {
     return {
-      showItem: false
+      showMall: false
     }
   },
   mounted() {
     this.$bus.$on('homePageShow', () => {
-      this.showItem = !this.showItem;
+      this.showMall = !this.showMall;
     });
-  },
-  methods: {
-    btnClick() {
-      this.showItem = !this.showItem;
-    }
   }
 }
 </script>

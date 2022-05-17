@@ -2,9 +2,10 @@
   <uesr-input
     ref="userPassword"
     :dataType="passwordShow ? 'text' : 'password'"
-    dataPlaceholder="密码"
+    :dataPlaceholder="dataPlaceholder"
     dataName="userAccount"
     @inputFocus="passwordFocus"
+    @inputBlur="passwordBlur"
   >
     <template v-slot:icon-slot>
       <img src="~assets/img/login/ico-password.png" alt="密码标志">
@@ -17,15 +18,25 @@
 
 <script>
 import uesrInput from "components/content/userInput/UesrInput";
+import { validatePassword } from "common/utils";
 
 export default {
   name: "PasswordInput",
   components: {
     uesrInput
   },
+  props: {
+    dataPlaceholder: {
+      type: String,
+      default() {
+        return '密码';
+      }
+    }
+  },
   data() {
     return {
       passwordShow: false, // 显示密码
+      passwordRight: false, // 密码格式正确
     }
   },
   computed: {
@@ -43,6 +54,27 @@ export default {
     passwordFocus() {
       this.$emit('passwordFocus');
     },
+    // 失去焦点
+    passwordBlur() {
+      this.$emit('passwordBlur');
+    },
+    // 密码显示
+    eyeWink() {
+      this.passwordShow = !this.passwordShow;
+    },
+    // 密码框错误显示
+    passwordError() {
+      // 判断格式
+      if(this.password.length === 0) {
+        this.showError('请输入密码');
+      } else if(!this.passwordCheck(this.password)) {
+        this.passwordRight = false;
+        this.showError('8-16个字符, 需包含大、小写字母和数字');
+      } else {
+        this.passwordRight = true;
+        console.log('密码格式符合要求');
+      }
+    },
     // 展示错误信息
     showError(error) {
       this.$refs.userPassword.showError(error);
@@ -51,9 +83,10 @@ export default {
     closeError() {
       this.$refs.userPassword.closeError();
     },
-    // 密码显示
-    eyeWink() {
-      this.passwordShow = !this.passwordShow;
+    // 验证格式
+    passwordCheck(password) {
+      // 8-16个字符, 需包含大、小写字母和数字
+      return validatePassword(password);
     },
   }
 }

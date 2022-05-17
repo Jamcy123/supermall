@@ -12,6 +12,7 @@
                :placeholder="dataPlaceholder"
                v-model="message"
                @focus="inputFocus"
+               @blur="inputBlur"
                class="input-label"
         />
       </div>
@@ -62,6 +63,10 @@ export default {
     // 获取焦点
     inputFocus() {
       this.$emit('inputFocus');
+    },
+    // 失去焦点
+    inputBlur() {
+      this.$emit('inputBlur');
     },
     // 展示错误信息
     showError(error) {
